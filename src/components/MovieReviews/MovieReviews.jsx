@@ -11,9 +11,9 @@ const MovieReviews = ({ movieId }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://api.example.com/movies/${movieId}/reviews`
+          `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=c665e06cda807389c12ac693d0a75999`
         );
-        setReviews(response.data);
+        setReviews(response.data.results);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -28,11 +28,13 @@ const MovieReviews = ({ movieId }) => {
       <h2>Отзывы</h2>
       {loading ? (
         <p>Загрузка...</p>
+      ) : reviews.length === 0 ? (
+        <p>Нет отзывов к этому фильму</p>
       ) : (
         reviews.map((review) => (
           <div key={review.id}>
-            <p>{review.text}</p>
-            <p>Оценка: {review.rating}</p>
+            <p>{review.content}</p>
+            <p>Оценка: {review.author_details.rating}</p>
           </div>
         ))
       )}

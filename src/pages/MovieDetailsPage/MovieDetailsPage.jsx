@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Navigation from "../../components/Navigation/Navigations";
+import MovieReviews from "../../components/MovieReviews/MovieReviews";
 
 const MovieDetailsPage = () => {
   const params = useParams();
@@ -76,12 +77,12 @@ const MovieDetailsPage = () => {
             : ""}
         </li>
       </ul>
-      <button onClick={handleCastClick}>Каст</button>
-      <button onClick={handleReviewClick}>Ревьюз</button>
+      <button onClick={handleCastClick}>CAST</button>
+      <button onClick={handleReviewClick}>REVIEWS</button>
 
       {showCast && (
         <div>
-          <h3>Каст:</h3>
+          <h3>CAST:</h3>
           <ul>
             {creditsData.cast.map((actor) => (
               <li key={actor.id}>
@@ -98,8 +99,8 @@ const MovieDetailsPage = () => {
 
       {showReview && (
         <div>
-          <h3>Ревьюз:</h3>
-          <p>{movieData.overview}</p>
+          <h3>REVIEWS:</h3>
+          <MovieReviews movieId={movieId} />
         </div>
       )}
     </div>
