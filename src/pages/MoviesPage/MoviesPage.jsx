@@ -1,14 +1,14 @@
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
+import MovieDetailsPage from "../MovieDetailsPage/MovieDetailsPage";
 
 const MoviesPage = ({ movies }) => {
   return (
     <div>
-      <h2>Movies</h2>
+      <h2>Фильмы</h2>
       <ul>
         {movies.map((movie) => (
           <li key={movie.id}>
             <h3>{movie.title}</h3>
-            <MovieReviews movieId={movie.id} />
+            <MovieDetailsPage movie={movie} />
           </li>
         ))}
       </ul>

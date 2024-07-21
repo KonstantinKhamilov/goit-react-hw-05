@@ -1,10 +1,10 @@
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
+import MovieCast from "../MovieCast/MovieCast";
 
 const MovieDetailsPage = ({ movie }) => {
   return (
     <div>
-      <h2>Movie Details</h2>
-      <MovieReviews movieId={movie.id} />
+      <h2>Детали фильма</h2>
+      <MovieCast movie={movie} />
     </div>
   );
 };
