@@ -4,8 +4,9 @@ import NavLink from "../../components/Navigation/NavLink/NavLink";
 const HomePage = () => {
   return (
     <div>
-      <h1>Добро пожаловать на домашнюю страницу!</h1>
       <Navigation />
+      <h1>Добро пожаловать на домашнюю страницу!</h1>
+
       <NavLink />
     </div>
   );

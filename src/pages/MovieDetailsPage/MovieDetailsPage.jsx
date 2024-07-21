@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios"; // или другой HTTP-клиент
+import axios from "axios";
+import Navigation from "../../components/Navigation/Navigations";
 
 const MovieDetailsPage = () => {
   const params = useParams();
   const movieId = params.movieId;
 
   const [movieData, setMovieData] = useState({}); // состояние для хранения данных фильма
+  const [creditsData, setCreditsData] = useState({}); // состояние для хранения данных о составе
+  const [showCast, setShowCast] = useState(false); // состояние для отображения состава
+  const [showReview, setShowReview] = useState(false); // состояние для отображения рецензий
 
   useEffect(() => {
     axios
@@ -19,6 +23,17 @@ const MovieDetailsPage = () => {
       .catch((error) => {
         console.error(error);
       });
+
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=c665e06cda807389c12ac693d0a75999`
+      )
+      .then((response) => {
+        setCreditsData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [movieId]);
 
   if (!movieData) {
@@ -27,8 +42,19 @@ const MovieDetailsPage = () => {
 
   const posterUrl = `https://image.tmdb.org/t/p/w500${movieData.poster_path}`;
 
+  const handleCastClick = () => {
+    setShowCast(true);
+    setShowReview(false);
+  };
+
+  const handleReviewClick = () => {
+    setShowCast(false);
+    setShowReview(true);
+  };
+
   return (
     <div>
+      <Navigation />
       <h1>{movieData.title}</h1>
       <img src={posterUrl} alt={movieData.title} />
       <ul>
@@ -50,6 +76,32 @@ const MovieDetailsPage = () => {
             : ""}
         </li>
       </ul>
+      <button onClick={handleCastClick}>Каст</button>
+      <button onClick={handleReviewClick}>Ревьюз</button>
+
+      {showCast && (
+        <div>
+          <h3>Каст:</h3>
+          <ul>
+            {creditsData.cast.map((actor) => (
+              <li key={actor.id}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
+                  alt={actor.name}
+                />
+                <span>{actor.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {showReview && (
+        <div>
+          <h3>Ревьюз:</h3>
+          <p>{movieData.overview}</p>
+        </div>
+      )}
     </div>
   );
 };
