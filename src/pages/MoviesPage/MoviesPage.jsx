@@ -1,4 +1,4 @@
-import MovieReviews from "../components/MovieReviews";
+import MovieReviews from "../../components/MovieReviews/MovieReviews";
 
 const MoviesPage = ({ movies }) => {
   return (

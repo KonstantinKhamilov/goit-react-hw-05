@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import HomePage from "../../pages/HomePage/HomePage";
 import MoviesPage from "../../pages/MoviesPage/MoviesPage";
@@ -8,12 +8,12 @@ import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
 const App = () => {
   return (
     <BrowserRouter>
-      <Switch>
+      <Routes>
         <Route path="/" exact component={HomePage} />
         <Route path="/movies" component={MoviesPage} />
         <Route path="/movies/:movieId" component={MovieDetailsPage} />
         <Route component={NotFoundPage} />
-      </Switch>
+      </Routes>
     </BrowserRouter>
   );
 };
