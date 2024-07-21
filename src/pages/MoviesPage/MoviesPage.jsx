@@ -1,17 +1,21 @@
-import MovieDetailsPage from "../MovieDetailsPage/MovieDetailsPage";
+import { useState } from "react";
+import Navigation from "../../components/Navigation/Navigations";
+import MoviesCast from "../MovieCast/MovieCast";
+import Movies from "../../components/Navigation/Movies/Movies";
 
-const MoviesPage = ({ movies }) => {
+const MoviesPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div>
-      <h2>Фильмы</h2>
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            <h3>{movie.title}</h3>
-            <MovieDetailsPage movie={movie} />
-          </li>
-        ))}
-      </ul>
+      <h1>Фильмы</h1>
+      <Navigation />
+      <MoviesCast />
+      <Movies searchQuery={searchQuery} handleSearch={handleSearch} />
     </div>
   );
 };

@@ -1,10 +1,13 @@
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
-
 const MovieCast = ({ movie }) => {
   return (
     <div>
       <h2>Актерский состав</h2>
-      <MovieReviews movieId={movie.id} />
+      {movie && <p>Фильм: {movie.title}</p>}
+      <ul>
+        <li>Actor 1</li>
+        <li>Actor 2</li>
+        <li>Actor 3</li>
+      </ul>
     </div>
   );
 };
