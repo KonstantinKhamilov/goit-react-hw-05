@@ -1,44 +1,27 @@
 import { useState, useEffect } from "react";
-import axios from "axios"; // или другой HTTP-клиент
 
 const MovieReviews = ({ movieId }) => {
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=c665e06cda807389c12ac693d0a75999`
-        );
-        setReviews(response.data.results);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReviews();
+    fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=c665e06cda807389c12ac693d0a75999`
+    )
+      .then((response) => response.json())
+      .then((data) => setReviews(data.results));
   }, [movieId]);
 
   return (
     <div>
-      <h2>Отзывы</h2>
-      {loading ? (
-        <p>Загрузка...</p>
-      ) : reviews.length === 0 ? (
-        <p>Нет отзывов к этому фильму</p>
-      ) : (
-        reviews.map((review) => (
-          <div key={review.id}>
+      <h2>Рецензии</h2>
+      <ul>
+        {reviews.map((review) => (
+          <li key={review.id}>
+            <h3>{review.author}</h3>
             <p>{review.content}</p>
-            <p>Оценка: {review.author_details.rating}</p>
-          </div>
-        ))
-      )}
-      {error && <p>Ошибка: {error}</p>}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

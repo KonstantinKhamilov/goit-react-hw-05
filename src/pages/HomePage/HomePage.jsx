@@ -1,13 +1,11 @@
-import Navigation from "../../components/Navigation/Navigations";
-import NavLink from "../../components/Navigation/NavLink/NavLink";
+/*import Navigation from "../../components/Navigation/Navigation";*/
+import MovieList from "../../components/MovieList/MovieList";
 
 const HomePage = () => {
   return (
     <div>
-      <Navigation />
       <h1>Добро пожаловать на домашнюю страницу!</h1>
-
-      <NavLink />
+      <MovieList />
     </div>
   );
 };

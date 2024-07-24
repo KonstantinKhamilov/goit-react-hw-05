@@ -1,23 +1,28 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import NotFoundPage from "../../../pages/NotFoundPage/NotFoundPage";
+/*import { useState } from "react";
+import MovieList from "../../components/MovieList/MovieList";
+import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
-const Movies = () => {
-  const [movies, setMovies] = useState([]);
+const MoviesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
+    setLoading(true);
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=c665e06cda807389c12ac693d0a75999&query=${searchQuery}`
       );
       const data = await response.json();
-      setMovies(data.results);
-      setSearchResult(data.results.length > 0);
+      if (data.results.length > 0) {
+        setMovies(data.results);
+      } else {
+        setMovies([]);
+      }
     } catch (error) {
       console.error(error);
-      setSearchResult(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -27,18 +32,13 @@ const Movies = () => {
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Введите название фильма"
       />
       <button onClick={handleSearch}>Поиск</button>
-      {searchResult === null ? (
-        <p>Введите запрос и нажмите кнопку Поиск</p>
-      ) : searchResult ? (
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          ))}
-        </ul>
+      {loading ? (
+        <p>Загрузка...</p>
+      ) : movies.length > 0 ? (
+        <MovieList movies={movies} />
       ) : (
         <NotFoundPage />
       )}
@@ -46,4 +46,5 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default MoviesPage;
+*/
