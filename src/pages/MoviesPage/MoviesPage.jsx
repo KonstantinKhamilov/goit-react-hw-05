@@ -8,8 +8,10 @@ const MoviesPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [searchClicked, setSearchClicked] = useState(false);
 
   const handleSearch = async () => {
+    setSearchClicked(true);
     setLoading(true);
     try {
       const response = await axios.get(
@@ -42,7 +44,7 @@ const MoviesPage = () => {
       <button onClick={handleSearch}>Поиск</button>
       {loading ? (
         <p>Загрузка...</p>
-      ) : searchQuery ? (
+      ) : searchClicked ? (
         searchResults.length ? (
           <ul>
             {searchResults.map((movie) => (
