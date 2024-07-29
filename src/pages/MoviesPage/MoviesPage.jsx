@@ -1,27 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import NotFoundPage from "../NotFoundPage/NotFoundPage";
+import MovieList from "../../components/MovieList/MovieList";
+import Loader from "./Loader";
 
 const MoviesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [searchClicked, setSearchClicked] = useState(false);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const query = searchParams.get("query");
+    if (query) {
+      setSearchQuery(query);
+      fetchMovies(query);
+    }
+  }, [searchParams]);
 
   const handleSearch = async () => {
-    setSearchClicked(true);
+    const query = searchQuery.trim();
+    if (query) {
+      setSearchParams({ query });
+      await fetchMovies(query);
+    }
+  };
+
+  const fetchMovies = async (query) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=c665e06cda807389c12ac693d0a75999&query=${searchQuery}`
+        `https://api.themoviedb.org/3/search/movie?api_key=c665e06cda807389c12ac693d0a75999&query=${query}`
       );
       const data = response.data;
-      const results = data.results.filter((movie) =>
-        movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResults(results);
+      setSearchResults(data.results);
     } catch (error) {
       console.error(error);
     } finally {
@@ -30,59 +43,26 @@ const MoviesPage = () => {
   };
 
   const handleMovieClick = (movie) => {
-    setSelectedMovie(movie);
+    navigate(`/movies/${movie.id}`, { from: navigate.location });
   };
 
   return (
     <div>
       <input
         type="text"
+        name="search-query"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Введите название фильма"
       />
       <button onClick={handleSearch}>Поиск</button>
       {loading ? (
-        <p>Загрузка...</p>
-      ) : searchClicked ? (
-        searchResults.length ? (
-          <ul>
-            {searchResults.map((movie) => (
-              <li key={movie.id}>
-                <Link
-                  to={`/movies/${movie.id}`}
-                  onClick={() => handleMovieClick(movie)}
-                >
-                  {movie.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <NotFoundPage />
-        )
+        <Loader />
+      ) : searchResults.length ? (
+        <MovieList movies={searchResults} onMovieClick={handleMovieClick} />
       ) : (
         <p>Введите запрос и нажмите кнопку Поиск</p>
       )}
-      {selectedMovie && <MovieCard movie={selectedMovie} />}
-    </div>
-  );
-};
-
-const MovieCard = ({ movie }) => {
-  return (
-    <div>
-      <img
-        src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-        alt={movie.title}
-      />
-      <h2>{movie.title}</h2>
-      <p>Год выпуска: {movie.release_date}</p>
-      <p>Краткое описание: {movie.overview}</p>
-      <div>
-        <button>Каст</button>
-        <button>Ревьюз</button>
-      </div>
     </div>
   );
 };

@@ -1,21 +1,39 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "../../pages/HomePage/HomePage";
-import MoviesPage from "../../pages/MoviesPage/MoviesPage";
-import MovieDetailsPage from "../../pages/MovieDetailsPage/MovieDetailsPage";
-import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
-import Navigation from "../../components/Navigation/Navigation";
+import { Route, Routes } from "react-router-dom";
+import Navigation from "../Navigation/Navigation";
+import { Suspense, lazy } from "react";
+
+const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
+const MoviesPage = lazy(() => import("../../pages/MoviesPage/MoviesPage"));
+const MovieDetailsPage = lazy(() =>
+  import("../../pages/MovieDetailsPage/MovieDetailsPage")
+);
+const MovieCast = lazy(() => import("../../pages/MovieCast/MovieCast"));
+const MovieReviews = lazy(() => import("../MovieReviews/MovieReviews"));
+const NotFoundPage = lazy(() =>
+  import("../../pages/NotFoundPage/NotFoundPage")
+);
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <div>
       <Navigation />
-      <Routes>
-        <Route path="/" exact element={<HomePage />} />
-        <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </BrowserRouter>
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <Routes>
+          <Route path="/" exact element={<HomePage />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route
+            path="/movies/:movieId"
+            element={
+              <MovieDetailsPage>
+                <Route path="cast" key="cast" element={<MovieCast />} />
+                <Route path="reviews" element={<MovieReviews />} />
+              </MovieDetailsPage>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </div>
   );
 };
 
