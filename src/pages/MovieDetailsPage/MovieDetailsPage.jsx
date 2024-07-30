@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
 
 const MovieDetailsPage = () => {
-  const { id } = useParams();
+  const { movieId } = useParams(); // Используйте movieId вместо id
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,11 +14,11 @@ const MovieDetailsPage = () => {
     if (movieFromState) {
       setMovie(movieFromState);
     } else {
-      if (id) {
-        console.log("id:", id);
-        console.log("Тип id:", typeof id);
+      if (movieId) {
+        console.log("movieId:", movieId);
+        console.log("Тип movieId:", typeof movieId);
         fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=c665e06cda807389c12ac693d0a75999`
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=c665e06cda807389c12ac693d0a75999`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -35,7 +35,7 @@ const MovieDetailsPage = () => {
           });
       }
     }
-  }, [id]); // пустой массив зависимостей
+  }, [movieId]); // пустой массив зависимостей
 
   const handleBackClick = () => {
     navigate(-1);
@@ -53,17 +53,11 @@ const MovieDetailsPage = () => {
           <p>Год выпуска: {movie.release_date}</p>
           <p>Краткое описание: {movie.overview}</p>
           <button onClick={handleBackClick}>Назад</button>
-          {movie && (
-            <div>
-              <NavLink to={`/movies/${id}/cast`} state={{ movieId: id }}>
-                Актеры
-              </NavLink>
-              <NavLink to={`/movies/${id}/reviews`} state={{ movieId: id }}>
-                Отзывы
-              </NavLink>
-            </div>
-          )}
-          <Outlet context={{ movieId: id }} />
+          <div>
+            <NavLink to={`/movies/${movieId}/cast`}>Актеры</NavLink>
+            <NavLink to={`/movies/${movieId}/reviews`}>Отзывы</NavLink>
+          </div>
+          <Outlet context={{ movieId: movieId }} />
         </div>
       ) : (
         <p>Загрузка...</p>
