@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams(); // Используйте movieId вместо id
   const [movie, setMovie] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
 
+  const location = useLocation();
+  // Создайте ссылку на backLink
+  const backLink = useRef(location.state?.from ?? "/");
   useEffect(() => {
     console.log("useEffect сработал!");
     const movieFromState = location.state.movie;
@@ -37,9 +38,9 @@ const MovieDetailsPage = () => {
     }
   }, [movieId]); // пустой массив зависимостей
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
+  //const handleBackClick = () => {
+  //  navigate(backLink.current); // Используйте backLink.current
+  //};
 
   return (
     <div>
@@ -52,7 +53,7 @@ const MovieDetailsPage = () => {
           />
           <p>Год выпуска: {movie.release_date}</p>
           <p>Краткое описание: {movie.overview}</p>
-          <button onClick={handleBackClick}>Назад</button>
+          <Link to={backLink.current}>Назад</Link>
           <div>
             <NavLink to={`/movies/${movieId}/cast`}>Актеры</NavLink>
             <NavLink to={`/movies/${movieId}/reviews`}>Отзывы</NavLink>
